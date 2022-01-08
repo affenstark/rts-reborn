@@ -1,5 +1,6 @@
--- Brittle Crown
+local EfGold = Object.find("EfGold", "vanilla")
 
+-- Brittle Crown
 local item = Item("Brittle Crown")
 item.pickupText = "Gain gold on hit... BUT lose gold on getting hit."
 item.sprite = Sprite.load("Items/resources/crown.png", 1, 12, 13)
@@ -21,7 +22,7 @@ callback.register("onDamage", function(hit, damage)
       end
       sound:play(0.8 * math.random() * 0.4)
       if misc.getOption("video.show_damage") then
-        CreateDamageText("-"..math.round(goldLoss), player.x, player.y - 6, Color.ROR_YELLOW)
+        CreateDamageText("-"..math.round(goldLoss), player.x - 12, player.y - 12, Color.ROR_YELLOW)
       end
     end
   end
@@ -35,11 +36,8 @@ callback.register("onHit", function(damager, actor, x, y)
     if stack > 0 then
       local goldGain = 2 * stack * Difficulty.getScaling(cost)
       if math.chance(30) then
-        misc.setGold(misc.getGold() + math.clamp(math.random(goldGain), 2, math.huge))
-        sound:play(0.8 * math.random() * 0.4)
-        if misc.getOption("video.show_damage") == true then
-          CreateDamageText("+"..math.round(goldGain), parent.x, parent.y - 6, Color.ROR_YELLOW)
-        end
+        local goldInst = EfGold:create(x, y)
+        goldInst:set("value", math.clamp(math.random(goldGain), 2, math.huge))
       end
     end
   end
